@@ -21,9 +21,9 @@ jobs:
       CHAT_ID: -1002287610863
       KERNEL_NAME: AnjaniLaurens
       KERNEL_BRANCH: main
-      KERNEL_REPO: https://github.com/malkist01/ginkgo.git
+      KERNEL_REPO: https://github.com/malkist01/ginkgo
       ANYKERNEL_REPO: https://github.com/malkist01/Anykernel3
-      CLANG_URL: https://gitlab.com/inkypen/prebuilts_clang_host_linux-x86.git
+      CLANG_URL: https://gitlab.com/kei-space/clang/r547379.git
       KSU_URL: https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh
       KSU_BRANCH: hookless
 
@@ -65,13 +65,12 @@ jobs:
     - name: Generate defconfig
       run: |
         cd $KERNEL_DIR
-        CONFIG_NAME="${{ matrix.codename }}_defconfig"
-        DEFCONFIG_PATH="arch/arm64/configs/vendor/$CONFIG_NAME"
-        echo "CONFIG_KSU=y" >> "${DEFCONFIG_PATH}"
-        echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> "${DEFCONFIG_PATH}"
-        echo "CONFIG_KSU_EXTRAS=y" >> "${DEFCONFIG_PATH}"
-        make O=out ARCH=arm64 "$DEFCONFIG_PATH"
-        mv out/.config "$DEFCONFIG_PATH"
+        DEFCONFIG="vendor/ginkgo_defconfig"
+        echo "CONFIG_KSU=y" >> "${DEFCONFIG}"
+        echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> "${DEFCONFIG}"
+        echo "CONFIG_KSU_EXTRAS=y" >> "${DEFCONFIG}"
+        make O=out ARCH=arm64 "$DEFCONFIG"
+        mv out/.config "$DEFCONFIG"
 
     - name: Build kernel
       run: |
@@ -125,7 +124,7 @@ jobs:
         export PATH="$CLANG_DIR/bin:$PATH"
         mkdir -p "$OUT_DIR"
 
-        make O="$OUT_DIR" ARCH=arm64 vendor/ginkgo_defconfig
+        make O="$OUT_DIR" ARCH=arm64 "$DEFCONFIG"
         make -j$(nproc) O="$OUT_DIR" ARCH=arm64 \
           CC=clang LD=ld.lld AR=llvm-ar AS=llvm-as NM=llvm-nm \
           OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip \
