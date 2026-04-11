@@ -66,10 +66,12 @@ jobs:
       run: |
         cd $KERNEL_DIR
         DEFCONFIG="vendor/ginkgo_defconfig"
+        export DEFCONFIG
         echo "CONFIG_KSU=y" >> "${DEFCONFIG}"
         echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> "${DEFCONFIG}"
         echo "CONFIG_KSU_EXTRAS=y" >> "${DEFCONFIG}"
-        make O=out ARCH=arm64 "$DEFCONFIG"
+        make O=out ARCH=arm64
+        make "$DEFCONFIG" O=out
         mv out/.config "$DEFCONFIG"
 
     - name: Build kernel
@@ -121,11 +123,14 @@ jobs:
 
         export KBUILD_BUILD_USER=ivy
         export KBUILD_BUILD_HOST="$KERNEL_COMMIT_ID"
+        PROCS=$(nproc --all)
+        export PROCS
         export PATH="$CLANG_DIR/bin:$PATH"
         mkdir -p "$OUT_DIR"
 
-        make O="$OUT_DIR" ARCH=arm64 "$DEFCONFIG"
-        make -j$(nproc) O="$OUT_DIR" ARCH=arm64 \
+        make O="$OUT_DIR" ARCH=arm64
+        make "$DEFCONFIG" O=out
+        make -j"${PROCS}" O="$OUT_DIR" ARCH=arm64 \
           CC=clang LD=ld.lld AR=llvm-ar AS=llvm-as NM=llvm-nm \
           OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip \
           CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
