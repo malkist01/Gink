@@ -70,7 +70,7 @@ jobs:
         echo "CONFIG_KSU=y" >> "${DEFCONFIG_PATH}"
         echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> "${DEFCONFIG_PATH}"
         echo "CONFIG_KSU_EXTRAS=y" >> "${DEFCONFIG_PATH}"
-        make O=out ARCH=arm64 "$CONFIG_NAME"
+        make O=out ARCH=arm64 "$DEFCONFIG_PATH"
         mv out/.config "$DEFCONFIG_PATH"
 
     - name: Build kernel
