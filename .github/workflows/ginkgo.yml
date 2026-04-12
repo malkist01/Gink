@@ -24,7 +24,7 @@ jobs:
       KERNEL_REPO: https://github.com/malkist01/Gink
       ANYKERNEL_REPO: https://github.com/malkist01/Anykernel3
       CLANG_URL: https://gitlab.com/kei-space/clang/r547379.git
-      KSU_URL: https://raw.githubusercontent.com/malkist01/ReSukiSU/main/kernel/setup.sh
+      KSU_URL: https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh
       KSU_BRANCH: main
 
     steps:
