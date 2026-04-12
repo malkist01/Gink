@@ -84,14 +84,16 @@ make O=out ARCH=arm64 $DEFCONFIG
 tg_msg "🔨 <b>Compilation Started</b>"
 make -j$(nproc --all) O=out \
 ARCH=arm64 \
-CC=clang \
-LD=ld.lld \
+LLVM=1 \
+LLVM_IAS=1 \
 AR=llvm-ar \
-AS=llvm-as \
 NM=llvm-nm \
+LD=ld.lld \
 OBJCOPY=llvm-objcopy \
 OBJDUMP=llvm-objdump \
 STRIP=llvm-strip \
+CC=clang \
+DTC_EXT=dtc \
 CROSS_COMPILE=aarch64-linux-android- \
 CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
 CLANG_TRIPLE=aarch64-linux-gnu- \
