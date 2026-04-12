@@ -37,7 +37,7 @@ jobs:
             folder: "KernelSU-Next"
             branch: "legacy"
             susfs_branch: "legacy_susfs"
-            susfs_ksu_patches: "KSUN/KSUN-SUSFS-2.0.0.patch"
+            susfs_ksu_patches: ""
             kernel_patches: "seccomp.patch scope-min-hooks-v1.6.patch"
             susfs_kernel_patches: "susfs-2.0.0.patch"
             extra_configs: "CONFIG_KSU_KPROBES_HOOK=n"
