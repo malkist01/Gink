@@ -1,4 +1,4 @@
-name: Ginkgo
+name: KSU
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         codename:
           - ginkgo
@@ -21,8 +21,8 @@ jobs:
       CHAT_ID: -1002287610863
       KERNEL_NAME: AnjaniLaurens
       KERNEL_BRANCH: main
-      KERNEL_REPO: https://github.com/malkist01/ginkgo
-      ANYKERNEL_REPO: https://github.com/malkist01/Anykernel3
+      KERNEL_REPO: https://github.com/malkist/G1
+      ANYKERNEL_REPO: https://github.com/DooPrjkt/Anykernel2
       CLANG_URL: https://gitlab.com/kei-space/clang/r547379.git
       KSU_URL: https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh
       KSU_BRANCH: hookless
@@ -65,14 +65,13 @@ jobs:
     - name: Generate defconfig
       run: |
         cd $KERNEL_DIR
-        DEFCONFIG="vendor/ginkgo_defconfig"
-        export DEFCONFIG
-        echo "CONFIG_KSU=y" >> "${DEFCONFIG}"
-        echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> "${DEFCONFIG}"
-        echo "CONFIG_KSU_EXTRAS=y" >> "${DEFCONFIG}"
-        make O=out ARCH=arm64
-        make "$DEFCONFIG" O=out
-        mv out/.config "$DEFCONFIG"
+        CONFIG_NAME="${{ matrix.codename }}_defconfig"
+        DEFCONFIG_PATH="arch/arm64/configs/vendor/$CONFIG_NAME"
+        echo "CONFIG_KSU=y" >> "${DEFCONFIG_PATH}"
+        echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> "${DEFCONFIG_PATH}"
+        echo "CONFIG_KSU_EXTRAS=y" >> "${DEFCONFIG_PATH}"
+        make O=out ARCH=arm64 "$CONFIG_NAME"
+        mv out/.config "$DEFCONFIG_PATH"
 
     - name: Build kernel
       run: |
@@ -123,14 +122,11 @@ jobs:
 
         export KBUILD_BUILD_USER=ivy
         export KBUILD_BUILD_HOST="$KERNEL_COMMIT_ID"
-        PROCS=$(nproc --all)
-        export PROCS
         export PATH="$CLANG_DIR/bin:$PATH"
         mkdir -p "$OUT_DIR"
 
-        make O="$OUT_DIR" ARCH=arm64
-        make "$DEFCONFIG" O=out
-        make -j"${PROCS}" O="$OUT_DIR" ARCH=arm64 \
+        make O="$OUT_DIR" ARCH=arm64 "$CONFIG_NAME"
+        make -j$(nproc) O="$OUT_DIR" ARCH=arm64 \
           CC=clang LD=ld.lld AR=llvm-ar AS=llvm-as NM=llvm-nm \
           OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip \
           CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
