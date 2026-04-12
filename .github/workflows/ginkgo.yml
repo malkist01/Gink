@@ -57,11 +57,14 @@ jobs:
         git clone --depth=1 "$CLANG_URL" clang
         echo "CLANG_DIR=$KERNEL_DIR/clang" >> $GITHUB_ENV
 
+    - name: Kernel path
+      run: |
+        cd $KERNEL_DIR
+        patch -p1 < kernel-4.14.patch
+        
     - name: Set up RKSU
       run: |
         cd $KERNEL_DIR
-        curl -LSs "https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/Patches/syscall_hook_patches.sh" | bash -s
-        curl -LSs "https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/Patches/backport_patches.sh" | bash -s
         curl -LSs "$KSU_URL" | bash -s $KSU_BRANCH
 
     - name: Generate defconfig
