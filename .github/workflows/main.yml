@@ -31,11 +31,6 @@ jobs:
             IN_DTBO: "out/arch/arm64/boot/dts/xiaomi/ginkgo-trinket-overlay.dtbo"
 
         build:
-          - type: Normal
-            ksu: false
-            exclude: susfs
-            ak3_suffix: ""
-
           - type: KSUN
             ksu: true
             repo: "KernelSU-Next/KernelSU-Next"
@@ -43,7 +38,7 @@ jobs:
             branch: "legacy"
             susfs_ksu_patches: "KSUN/KSUN-SUSFS-2.0.0.patch"
             kernel_patches: "seccomp.patch scope-min-hooks-v1.6.patch"
-            susfs_kernel_patches: "susfs-2.1.0.patch"
+            susfs_kernel_patches: "susfs-2.0.0.patch"
             extra_configs: "CONFIG_KSU_KPROBES_HOOK=n"
             ak3_suffix: "-KSUNext"
 
