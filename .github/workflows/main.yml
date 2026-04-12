@@ -33,10 +33,10 @@ jobs:
         build:
           - type: KSUN
             ksu: true
-            repo: "KernelSU-Next/KernelSU-Next"
+            repo: "malkist01/KernelSU-Next"
             folder: "KernelSU-Next"
-            branch: "legacy"
-            susfs_branch: "legacy_susfs"
+            branch: "main"
+            susfs_branch: ""
             susfs_ksu_patches: ""
             kernel_patches: "seccomp.patch scope-min-hooks-v1.6.patch"
             susfs_kernel_patches: "susfs-2.0.0.patch"
