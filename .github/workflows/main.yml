@@ -1,50 +1,21 @@
-name: Build Kernel Ginkgo (KSU)
+name: ginkgo-main_v2
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - ksun
 
 jobs:
   build:
-    name: Build Kernel
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04   # jangan pakai latest biar stabil
 
     steps:
-    # ===============================
-    # Checkout source
-    # ===============================
     - name: Checkout source
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
 
-    # ===============================
-    # Install dependencies
-    # ===============================
-    - name: Install dependencies
+    - name: Building Kernel
+      env:
+        TZ: Asia/Jakarta
+        CHATID: -1002287610863
+        BOT_TOKEN: 8759815397:AAH77oV6G6bO4TaxoOPvMd9kA2KYk0hGozE
       run: |
-        sudo apt update
-        sudo apt install -y \
-          bc bison build-essential ccache curl flex \
-          git gnupg gperf libncurses-dev \
-          libssl-dev libelf-dev lzop \
-          python3 python-is-python3 \
-          zip unzip zstd
-
-    # ===============================
-    # Setup AOSP Clang (STABLE)
-    # ===============================
-    - name: Setup AOSP Clang
-      run: |
-        git clone --depth=1 https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 prebuilts-clang
-        echo "CLANG_PATH=$PWD/prebuilts-clang/clang-r487747c/bin" >> $GITHUB_ENV
-        echo "$PWD/prebuilts-clang/clang-r487747c/bin" >> $GITHUB_PATH
-
-    # ===============================
-    # Export build variables
-    # ===============================
-    - name: Export build variables
-      run: |
-        echo "ARCH=arm64" >> $GITHU
+        chmod +x kernel.sh
+        bash kernel.sh
